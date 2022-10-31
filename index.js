@@ -6,17 +6,17 @@ app.use(cors());
 app.use(express.json())
 
 const port = process.env.PORT || 5000;
-const users = [
-    { id: 1, name: 'Nafiz', email: "nafiz@gmail.com" },
-    { id: 2, name: 'Tanvir', email: "tanvir@gmail.com" },
-    { id: 3, name: 'Hossain', email: "hossain@gmail.com" },
-    { id: 4, name: 'Saikat', email: "saikat@gmail.com" },
-    { id: 5, name: 'Iqbal', email: "iqbal@gmail.com" },
-    { id: 6, name: 'Nishad', email: "nishad@gmail.com" },
-    { id: 7, name: 'Omor', email: "omor@gmail.com" },
-    { id: 8, name: 'Abubakkar', email: "abubakkar@gmail.com" },
-    { id: 9, name: 'Saaf', email: "saad@gmail.com" },
-]
+// const users = [
+//     { id: 1, name: 'Nafiz', email: "nafiz@gmail.com" },
+//     { id: 2, name: 'Tanvir', email: "tanvir@gmail.com" },
+//     { id: 3, name: 'Hossain', email: "hossain@gmail.com" },
+//     { id: 4, name: 'Saikat', email: "saikat@gmail.com" },
+//     { id: 5, name: 'Iqbal', email: "iqbal@gmail.com" },
+//     { id: 6, name: 'Nishad', email: "nishad@gmail.com" },
+//     { id: 7, name: 'Omor', email: "omor@gmail.com" },
+//     { id: 8, name: 'Abubakkar', email: "abubakkar@gmail.com" },
+//     { id: 9, name: 'Saaf', email: "saad@gmail.com" },
+// ]
 const uri = "mongodb+srv://dbuser1:JqnCiDz32aXNycT@cluster0.163tjbx.mongodb.net/?retryWrites=true&w=majority";
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
@@ -32,6 +32,15 @@ async function run() {
         // const result = await userCollection.insertOne(user);
         // console.log(result);
 
+
+        //GET Data From Database
+        app.get("/users", async(req, res) => {
+            const cursor = userCollection.find({});
+            const users = await cursor.toArray()
+            res.send(users)
+        })
+
+        //POST Data InTo Database
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await userCollection.insertOne(user);
@@ -53,9 +62,9 @@ run().catch(console.dir);
 app.get('/', (req, res) => {
     res.send('Simple node server ruinnung')
 })
-app.get("/users", (req, res) => {
-    res.send(users)
-})
+// app.get("/users", (req, res) => {
+//     res.send(users)
+// })
 
 
 // app.post('/users', (req, res) => {
