@@ -1,22 +1,12 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const cors = require('cors');
 app.use(cors());
 app.use(express.json())
 
 const port = process.env.PORT || 5000;
-// const users = [
-//     { id: 1, name: 'Nafiz', email: "nafiz@gmail.com" },
-//     { id: 2, name: 'Tanvir', email: "tanvir@gmail.com" },
-//     { id: 3, name: 'Hossain', email: "hossain@gmail.com" },
-//     { id: 4, name: 'Saikat', email: "saikat@gmail.com" },
-//     { id: 5, name: 'Iqbal', email: "iqbal@gmail.com" },
-//     { id: 6, name: 'Nishad', email: "nishad@gmail.com" },
-//     { id: 7, name: 'Omor', email: "omor@gmail.com" },
-//     { id: 8, name: 'Abubakkar', email: "abubakkar@gmail.com" },
-//     { id: 9, name: 'Saaf', email: "saad@gmail.com" },
-// ]
+
 const uri = "mongodb+srv://dbuser1:JqnCiDz32aXNycT@cluster0.163tjbx.mongodb.net/?retryWrites=true&w=majority";
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
@@ -34,7 +24,7 @@ async function run() {
 
 
         //GET Data From Database
-        app.get("/users", async(req, res) => {
+        app.get("/users", async (req, res) => {
             const cursor = userCollection.find({});
             const users = await cursor.toArray()
             res.send(users)
@@ -48,6 +38,17 @@ async function run() {
             // user.id = users.length + 1;
             res.send(user)
             console.log(result);
+
+        });
+
+        //  Delete User 
+        app.delete('/users/:id', async (req, res) => {
+
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await userCollection.deleteOne(query);
+            res.send(result);
+                console.log(id);
 
         })
     } finally {
